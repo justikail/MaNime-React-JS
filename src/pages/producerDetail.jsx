@@ -1,16 +1,16 @@
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
-import Breadcrumb from "../components/animeDetail/detailBreadcrumb";
+import { visibility } from "../utils/visibility";
 import useProducerDetail from "../hooks/useProducerDetail";
+import Breadcrumb from "../components/animeDetail/detailBreadcrumb";
 import DetailSkeleton from "../components/producerDetail/detailSkeleton";
 import DetailTitle from "../components/producerDetail/detailTitle";
 import DetailImage from "../components/producerDetail/detailImage";
 import DetailInformation from "../components/producerDetail/detailInformation";
-import visibility from "../utils/visibility";
 import DetailAbout from "../components/producerDetail/detailAbout";
 import DetailAnimeList from "../components/producerDetail/detailAnimeList";
-import NotFound from "./notFound";
+import { FavoriteProvider } from "../context/favoriteContext";
 
 export default function ProducerDetail() {
   const { id, title } = useParams();
@@ -21,9 +21,10 @@ export default function ProducerDetail() {
     anime: true,
   });
   const [filter, setFilter] = useState("");
+  const navigate = useNavigate("");
 
   if (!loading && (!data || data.length === 0)) {
-    return <NotFound />;
+    return navigate("/404");
   }
 
   return (
@@ -34,7 +35,7 @@ export default function ProducerDetail() {
             <DetailSkeleton />
           ) : (
             data && (
-              <>
+              <FavoriteProvider loading={loading}>
                 <Helmet>
                   <title>MaNime - {data.titles[0].title}</title>
                   <meta property="og:url" content={`https://manime-reactjs.vercel.app/producer/${id}/${title}`} />
@@ -76,7 +77,7 @@ export default function ProducerDetail() {
                     <DetailAnimeList id={id} setIsShow={() => visibility({ key: "anime", setIsShow: setIsShow })} isShow={isShow.anime} filter={filter} setFilter={setFilter} />
                   </div>
                 </div>
-              </>
+              </FavoriteProvider>
             )
           )}
         </div>

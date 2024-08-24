@@ -1,17 +1,18 @@
-import NotFound from "./notFound";
 import AnimeListSkeleton from "../components/animePaging/animeCardSkeleton";
 import AnimeList from "../components/animePaging/animeCard";
 import Pagination from "../components/animePaging/pagination";
 import { Helmet } from "react-helmet-async";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useListByGenre } from "../hooks/useAnimePaging";
+import { FavoriteProvider } from "../context/favoriteContext";
 
 export default function ListByGenre() {
   const { id, title } = useParams();
   const { data, loading, page, lastPage, handleNextPage, handlePrevPage } = useListByGenre({ id: id });
+  const navigate = useNavigate();
 
   if (!loading && (!data || data.length === 0)) {
-    return <NotFound />;
+    return navigate("/404");
   }
 
   return (
@@ -25,19 +26,21 @@ export default function ListByGenre() {
         <meta property="og:image:type" content="image/png" />
         <link rel="canonical" href={`https://manime-reactjs.vercel.app/genre/${id}/${title}`} />
       </Helmet>
-      <section className="anime-list" id="list-genre">
-        <h1>Genre : {title.replaceAll("_", " ")}</h1>
-        <div className="anime-list-container">
-          {loading ? (
-            Array.from({ length: data.length > 0 ? data.length : 25 }).map((_, index) => <AnimeListSkeleton key={index} />)
-          ) : id === "12" ? (
-            <p>Puasa Bro ...</p>
-          ) : (
-            data.map((anime, index) => <AnimeList anime={anime} key={`${anime.mal_id}${index}`} />)
-          )}
-        </div>
-        <Pagination page={page} lastPage={lastPage} handleNextPage={handleNextPage} handlePrevPage={handlePrevPage} loading={loading} />
-      </section>
+      <FavoriteProvider loading={loading}>
+        <section className="anime-list" id="list-genre">
+          <h1>Genre : {title.replaceAll("_", " ")}</h1>
+          <div className="anime-list-container">
+            {loading ? (
+              Array.from({ length: data.length > 0 ? data.length : 25 }).map((_, index) => <AnimeListSkeleton key={index} />)
+            ) : id === "12" ? (
+              <p>Puasa Bro ...</p>
+            ) : (
+              data.map((anime, index) => <AnimeList anime={anime} key={`${anime.mal_id}${index}`} />)
+            )}
+          </div>
+          <Pagination page={page} lastPage={lastPage} handleNextPage={handleNextPage} handlePrevPage={handlePrevPage} loading={loading} />
+        </section>
+      </FavoriteProvider>
     </>
   );
 }

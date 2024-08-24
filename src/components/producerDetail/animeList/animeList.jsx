@@ -11,9 +11,7 @@ function AnimeList({ id, filter }) {
       <div className="studio-animelist-container">
         {loading
           ? Array.from({ length: 25 }).map((_, index) => <AnimeListSkeleton key={index} />)
-          : filter
-          ? data.filter((anime) => anime.type === filter).map((anime, index) => <AnimeListCard anime={anime} key={`${anime.mal_id}${index}`} />)
-          : data.map((anime, index) => <AnimeListCard anime={anime} key={`${anime.mal_id}${index}`} />)}
+          : data.filter((anime) => (filter ? anime.type === filter : true)).map((anime, index) => <AnimeListCard anime={anime} key={`${anime.mal_id}${index}`} />)}
       </div>
       <button className="load-more" onClick={handleLoad} disabled={lastPage === false} style={{ backgroundColor: lastPage === false ? "#333" : "#030303" }}>
         {fetching ? <div className="spinner"></div> : "Load More"}

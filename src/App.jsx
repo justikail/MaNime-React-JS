@@ -10,10 +10,10 @@ import ListBySeason from "./pages/listBySeason.jsx";
 import AnimeDetail from "./pages/animeDetail.jsx";
 import RandomAnime from "./pages/randomAnime.jsx";
 import ProducerDetail from "./pages/producerDetail.jsx";
-// import Signin from "./Pages/Signin.jsx";
-// import Signup from "./Pages/Signup.jsx";
-// import Dashboard from "./Pages/Dashboard.jsx";
-// import { ProtectedRoute, AuthRoute } from "./Utils/ProtectedRoute.jsx";
+import Signin from "./pages/signIn.jsx";
+import Signup from "./pages/signUp.jsx";
+import Dashboard from "./pages/dashboard.jsx";
+import { PrivateRoute, PublicRoute } from "./components/auth/authRoute.jsx";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { SkeletonTheme } from "react-loading-skeleton";
 import { Analytics } from "@vercel/analytics/react";
@@ -122,9 +122,36 @@ export default function App() {
                 </Layout>
               }
             />
-            {/*<Route path="/signin" element={<Layout><AuthRoute component={Signin} /></Layout>} />
-            <Route path="/signup" element={<Layout><AuthRoute component={Signup} /></Layout>} />
-            <Route path="/client" element={<Layout><ProtectedRoute component={Dashboard} /></Layout>} />*/}
+            <Route
+              path="/signin"
+              element={
+                <PublicRoute>
+                  <Layout>
+                    <Signin />
+                  </Layout>
+                </PublicRoute>
+              }
+            />
+            <Route
+              path="/signup"
+              element={
+                <PublicRoute>
+                  <Layout>
+                    <Signup />
+                  </Layout>
+                </PublicRoute>
+              }
+            />
+            <Route
+              path="/client"
+              element={
+                <PrivateRoute>
+                  <Layout>
+                    <Dashboard />
+                  </Layout>
+                </PrivateRoute>
+              }
+            />
             <Route
               path="/musim/:season/:year"
               element={

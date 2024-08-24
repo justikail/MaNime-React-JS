@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { useAnimeDetail } from "../hooks/useFetchDetail";
-import visibility from "../utils/visibility";
+import { visibility } from "../utils/visibility";
 import Breadcrumb from "../components/animeDetail/detailBreadcrumb";
 import DetailSkeleton from "../components/animeDetail/detailSkeleton";
 import DetailTitle from "../components/animeDetail/detailTitle";
@@ -22,7 +22,7 @@ import DetailSongs from "../components/animeDetail/detailSongs";
 import DetailSuggest from "../components/animeDetail/detailSuggest";
 import DetailRestricted from "../components/animeDetail/detailRestricted";
 import DetailGallery from "../components/animeDetail/detailGallery";
-import NotFound from "./notFound";
+import { FavoriteProvider } from "../context/favoriteContext";
 
 export default function AnimeDetail() {
   const { id, title } = useParams();
@@ -39,9 +39,10 @@ export default function AnimeDetail() {
     stream: false,
     info: true,
   });
+  const navigate = useNavigate();
 
   if (!loading && (!data || data.length === 0)) {
-    return <NotFound />;
+    return navigate("/404");
   }
 
   return (
@@ -53,7 +54,7 @@ export default function AnimeDetail() {
             <DetailSkeleton />
           ) : (
             data && (
-              <>
+              <FavoriteProvider loading={loading}>
                 <Helmet>
                   <title>MaNime - {data.title}</title>
                   <meta property="og:url" content={`https://manime-reactjs.vercel.app/detail/${id}/${title}`} />
@@ -67,7 +68,7 @@ export default function AnimeDetail() {
 
                 <div className="detail-anime-table">
                   <div className="detail-anime-left">
-                    <DetailImage data={data} />
+                    <DetailImage data={data} loading={loading} />
 
                     <div className="detail-anime-detail">
                       <DetailShare id={id} title={title} />
@@ -114,7 +115,7 @@ export default function AnimeDetail() {
                     <DetailSuggest id={id} setIsShow={() => visibility({ key: "suggest", setIsShow: setIsShow })} isShow={isShow.suggest} />
                   </div>
                 </div>
-              </>
+              </FavoriteProvider>
             )
           )}
         </div>

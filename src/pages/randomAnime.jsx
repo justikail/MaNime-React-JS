@@ -2,8 +2,7 @@ import { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { useAnimeRandom } from "../hooks/useFetchDetail";
 import { formattedTitle } from "../utils/formatter";
-import { Link } from "react-router-dom";
-import visibility from "../utils/visibility";
+import { visibility } from "../utils/visibility";
 import RandomSkeleton from "../components/animeDetail/random/randomSkeleton";
 import Breadcrumb from "../components/animeDetail/detailBreadcrumb";
 import DetailTitle from "../components/animeDetail/detailTitle";
@@ -19,6 +18,7 @@ import DetailChar from "../components/animeDetail/detailChar";
 import DetailSuggest from "../components/animeDetail/detailSuggest";
 import DetailRestricted from "../components/animeDetail/detailRestricted";
 import DetailGallery from "../components/animeDetail/detailGallery";
+import { FavoriteProvider } from "../context/favoriteContext";
 
 export default function RandomAnime() {
   const { data, loading, isRestricted, translatedSynopsis, translatedBackground } = useAnimeRandom();
@@ -41,7 +41,7 @@ export default function RandomAnime() {
             <RandomSkeleton />
           ) : (
             data && (
-              <>
+              <FavoriteProvider loading={loading}>
                 <Helmet>
                   <title>MaNime - Random Anime</title>
                   <meta property="og:url" content="https://manime-reactjs.vercel.app/random" />
@@ -55,10 +55,10 @@ export default function RandomAnime() {
 
                 <div className="detail-anime-table">
                   <div className="detail-anime-left">
-                    <DetailImage data={data} />
+                    <DetailImage data={data} loading={loading} />
 
                     <div className="detail-anime-detail">
-                      <DetailShare id={data.mal_id} title={data.title} />
+                      <DetailShare id={data.mal_id.toString()} title={data.title} />
 
                       <DetailInformation data={data} setIsShow={() => visibility({ key: "info", setIsShow: setIsShow })} isShow={isShow.info} />
 
@@ -83,22 +83,22 @@ export default function RandomAnime() {
                       <DetailRatings data={data} />
                     </div>
 
-                    <DetailGallery id={data.mal_id} title={data.title} setIsShow={() => visibility({ key: "trailer", setIsShow: setIsShow })} isShow={isShow.trailer} />
+                    <DetailGallery id={data.mal_id.toString()} title={data.title} setIsShow={() => visibility({ key: "trailer", setIsShow: setIsShow })} isShow={isShow.trailer} />
 
                     <DetailSynopsis data={data} setIsShow={() => visibility({ key: "synopsis", setIsShow: setIsShow })} isShow={isShow.synopsis} translatedSynopsis={translatedSynopsis} />
 
                     <DetailBackground data={data} setIsShow={() => visibility({ key: "background", setIsShow: setIsShow })} isShow={isShow.background} translatedBackground={translatedBackground} />
 
-                    <DetailChar id={data.mal_id} title={data.title} setIsShow={() => visibility({ key: "char", setIsShow: setIsShow })} isShow={isShow.char} />
+                    <DetailChar id={data.mal_id.toString()} title={data.title} setIsShow={() => visibility({ key: "char", setIsShow: setIsShow })} isShow={isShow.char} />
 
-                    <DetailSuggest id={data.id} setIsShow={() => visibility({ key: "suggest", setIsShow: setIsShow })} isShow={isShow.suggest} />
+                    <DetailSuggest id={data.mal_id.toString()} setIsShow={() => visibility({ key: "suggest", setIsShow: setIsShow })} isShow={isShow.suggest} />
 
-                    <Link className="load-more" to={formattedTitle({ malId: data.mal_id, title: data.title })}>
+                    <a className="load-more" href={formattedTitle({ malId: data.mal_id, title: data.title })}>
                       MORE DETAIL
-                    </Link>
+                    </a>
                   </div>
                 </div>
-              </>
+              </FavoriteProvider>
             )
           )}
         </div>

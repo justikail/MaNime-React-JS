@@ -6,9 +6,10 @@ function VideoModal({ open, onClose, embedUrl }) {
     <Modal
       open={open}
       onClose={onClose}
-      center
+      center={true}
       closeOnOverlayClick={true}
       closeOnEsc={true}
+      blockScroll={true}
       styles={{
         modal: {
           position: "fixed",
@@ -22,6 +23,7 @@ function VideoModal({ open, onClose, embedUrl }) {
           marginTop: "20px",
         },
       }}
+      closeIconId="btn-close-modal"
     >
       <iframe
         style={{

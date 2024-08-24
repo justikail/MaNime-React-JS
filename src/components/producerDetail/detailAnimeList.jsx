@@ -10,21 +10,11 @@ function DetailAnimeList({ setIsShow, isShow, filter, setFilter, id }) {
         </h2>
 
         <div className="studio-animelist-filter">
-          <button data-value="tv" onClick={() => setFilter("TV")}>
-            TV
-          </button>
-          <button data-value="ona" onClick={() => setFilter("ONA")}>
-            ONA
-          </button>
-          <button data-value="ova" onClick={() => setFilter("OVA")}>
-            OVA
-          </button>
-          <button data-value="movie" onClick={() => setFilter("Movie")}>
-            MOVIE
-          </button>
-          <button data-value="other" onClick={() => setFilter("")}>
-            OTHER
-          </button>
+          {["TV", "ONA", "OVA", "Movie", ""].map((t) => (
+            <button key={t} type="button" onClick={() => setFilter(t)} style={{ backgroundColor: filter == t ? "#333" : "#030303" }}>
+              {t.toUpperCase() || "ALL"}
+            </button>
+          ))}
         </div>
       </div>
       {isShow && <AnimeList id={id} filter={filter} />}

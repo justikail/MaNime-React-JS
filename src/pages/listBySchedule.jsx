@@ -4,6 +4,7 @@ import AnimeList from "../components/animePaging/animeCard";
 import { Helmet } from "react-helmet-async";
 import { useListSchedule } from "../hooks/useAnimePaging";
 import { useState } from "react";
+import { FavoriteProvider } from "../context/favoriteContext";
 
 export default function ListBySchedule() {
   const [day, setDay] = useState("sunday");
@@ -20,24 +21,26 @@ export default function ListBySchedule() {
         <meta property="og:image:type" content="image/png" />
         <link rel="canonical" href="https://manime-reactjs.vercel.app/jadwal" />
       </Helmet>
-      <section className="anime-list" id="schedule">
-        <h1>
-          Jadwal :
-          <select name="day" id="day" onChange={(e) => setDay(e.target.value)}>
-            <option value="sunday">Minggu</option>
-            <option value="monday">Senin</option>
-            <option value="tuesday">Selasa</option>
-            <option value="wednesday">Rabu</option>
-            <option value="thursday">Kamis</option>
-            <option value="friday">Jumat</option>
-            <option value="saturday">Sabtu</option>
-          </select>
-        </h1>
-        <div className="anime-list-container">
-          {loading ? Array.from({ length: data.length > 0 ? data.length : 25 }).map((_, index) => <AnimeListSkeleton key={index} />) : data.map((anime, index) => <AnimeList anime={anime} key={`${anime.mal_id}${index}`} />)}
-        </div>
-        <Pagination page={page} lastPage={lastPage} handleNextPage={handleNextPage} handlePrevPage={handlePrevPage} loading={loading} />
-      </section>
+      <FavoriteProvider loading={loading}>
+        <section className="anime-list" id="schedule">
+          <h1>
+            Jadwal :
+            <select name="day" id="day" onChange={(e) => setDay(e.target.value)}>
+              <option value="sunday">Minggu</option>
+              <option value="monday">Senin</option>
+              <option value="tuesday">Selasa</option>
+              <option value="wednesday">Rabu</option>
+              <option value="thursday">Kamis</option>
+              <option value="friday">Jumat</option>
+              <option value="saturday">Sabtu</option>
+            </select>
+          </h1>
+          <div className="anime-list-container">
+            {loading ? Array.from({ length: data.length > 0 ? data.length : 25 }).map((_, index) => <AnimeListSkeleton key={index} />) : data.map((anime, index) => <AnimeList anime={anime} key={`${anime.mal_id}${index}`} />)}
+          </div>
+          <Pagination page={page} lastPage={lastPage} handleNextPage={handleNextPage} handlePrevPage={handlePrevPage} loading={loading} />
+        </section>
+      </FavoriteProvider>
     </>
   );
 }

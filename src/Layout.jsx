@@ -11,7 +11,15 @@ export default function Layout({ children }) {
   return (
     <>
       <Header />
-      {children}
+      <div
+        style={{
+          width: "100%",
+          maxWidth: "1280px",
+          margin: "auto",
+        }}
+      >
+        {children}
+      </div>
       <GenreList />
       {showButton && <BtnBackTop />}
       <Footer />

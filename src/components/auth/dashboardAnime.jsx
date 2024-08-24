@@ -1,22 +1,22 @@
 import { Link } from "react-router-dom";
-import { mappingStatus } from "../../utils/mapping";
 import { formattedTitle } from "../../utils/formatter";
+import { mappingStatus } from "../../utils/mapping";
 import { useFavorite } from "../../hooks/useFavoriteAnime";
 import PropTypes from "prop-types";
 import Ping from "../animation/ping";
 import BtnFav from "../button/btnFav";
 
-function AnimeList({ anime }) {
-  const { isFavorite, handleToggleFavorite, isLoading } = useFavorite({ anime: anime });
+function DashboardAnime({ anime }) {
+  const { isFavorite, handleOtherToggle, isLoading } = useFavorite({ anime: anime });
 
   return (
     <div className="anime-list-card">
-      <Link to={formattedTitle({ malId: anime.mal_id, title: anime.title })}>
-        <img src={anime.images.webp.large_image_url} alt={anime.title} className="anime-list-image" loading="lazy" />
+      <Link to={formattedTitle({ malId: anime.animeId, title: anime.title })}>
+        <img src={anime.img} alt={anime.title} loading="lazy" className="anime-list-image" />
         <div className="anime-list-detail">
           <span>{anime.title}</span>
           <p>
-            {`${anime.type || "Unknown"}${anime.episodes > 1 ? `(${anime.episodes})` : ""}`} <i className="uil uil-star"></i> {anime.score || "N/A"} <i className="uil uil-user"></i> {anime.members.toLocaleString() || "?"}
+            {`${anime.type || "Unknown"}${anime.episode > 1 ? `(${anime.episode})` : ""}`} <i className="uil uil-star"></i> {anime.score || "N/A"} <i className="uil uil-user"></i> {anime.popularity.toLocaleString() || "?"}
           </p>
         </div>
         <span className="anime-list-status">{mappingStatus({ status: anime.status }) || "?"}</span>
@@ -27,12 +27,12 @@ function AnimeList({ anime }) {
             onClick={(e) => {
               e.stopPropagation();
               e.preventDefault();
-              handleToggleFavorite(anime);
+              handleOtherToggle(anime);
             }}
             isDisable={isLoading}
             isFavorite={isFavorite}
             tltipPlace={"left"}
-            id={anime.mal_id}
+            id={anime.animeId}
           />
         )}
       </Link>
@@ -40,8 +40,8 @@ function AnimeList({ anime }) {
   );
 }
 
-AnimeList.propTypes = {
+DashboardAnime.propTypes = {
   anime: PropTypes.object,
 };
 
-export default AnimeList;
+export default DashboardAnime;

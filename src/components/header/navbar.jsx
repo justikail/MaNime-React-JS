@@ -5,7 +5,17 @@ function Navbar() {
     <nav>
       <ul className="navbar-category">
         <li>
-          <Link to="/">Home</Link>
+          <Link to="/" className="uil uil-home" />
+        </li>
+        <li>
+          <a href="/signin" className="uil uil-signin">
+            &nbsp;Signin
+          </a>
+        </li>
+        <li>
+          <a href="/signup" className="uil uil-signin">
+            &nbsp;Signup
+          </a>
         </li>
         <li>
           <a href="/detail">Anime List</a>
