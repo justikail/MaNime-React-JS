@@ -12,7 +12,7 @@ export default function Home() {
   const popularNow = usePopularNow();
   const topUpcoming = useTopUpcoming();
 
-  const isLoading = topAnime.loading || popularAnime.loading || onGoingAnime.loading || completeAnime.loading || popularNow.loading || topUpcoming.loading;
+  const isLoading = [topAnime.loading, popularAnime.loading, onGoingAnime.loading, completeAnime.loading, popularNow.loading, topUpcoming.loading].some(Boolean);
 
   return (
     <>
