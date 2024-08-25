@@ -55,6 +55,10 @@ export default function App() {
         return <Route key={path} path={path} element={<PublicRoute>{component}</PublicRoute>} />;
       }
 
+      if (path == "*") {
+        return <Route key={path} path={path} element={<NotFound />} />;
+      }
+
       return <Route key={path} path={path} element={component} />;
     });
 
